@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Append to Flat File</title>
+<script>
+    function appendToFile() {
+      var name = document.getElementById('name').value;
+      var email = document.getElementById('email').value;
+
+ 
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/append', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          console.log(xhr.responseText);
+        }
+      };
+      xhr.send('name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email));
+    }
+</script>
+</head>
+<body>
+<h1>Append to Flat File</h1>
+<form>
+<label for="name">Name:</label>
+<input type="text" id="name" name="name"><br><br>
+<label for="email">Email:</label>
+<input type="email" id="email" name="email"><br><br>
+<button type="button" onclick="appendToFile()">Append to File</button>
+</form>
+</body>
+</html>

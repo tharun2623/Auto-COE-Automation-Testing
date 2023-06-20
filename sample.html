@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 200px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      z-index: 9999;
+    }
+  </style>
+  <script>
+    function handleCheckboxClick(event) {
+      event.stopPropagation();
+      var checkbox = document.getElementById("myCheckbox");
+      if (checkbox.checked) {
+        window.open("your-link-here", "_blank");
+      } else {
+        openPopup();
+      }
+    }
+
+    function openPopup() {
+      var popup = document.getElementById("myPopup");
+      popup.style.display = "block";
+    }
+
+    function closePopup() {
+      var popup = document.getElementById("myPopup");
+      popup.style.display = "none";
+    }
+  </script>
+</head>
+<body>
+  <label for="myCheckbox" onclick="openPopup()">
+    <a href="#">Label Text</a>
+  </label>
+  <input type="checkbox" id="myCheckbox" onclick="handleCheckboxClick(event)">
+
+  <div class="popup" id="myPopup">
+    <h2>Popup Content</h2>
+    <p>This is the content of the popup.</p>
+    <button onclick="closePopup()">Close</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+:root {
+    --black-color: #121212;
+    --nav-background: rgb(49, 36, 26);
+    --title-color: rgb(225, 181, 143);
+    --white-color: #fff;
+    --green-color: #04AA6D;
+}
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--nav-background);
+    height: 80px;
+}
+
+.logo {
+    width: 20%;
+    padding-left: 100px;
+    margin-left: -70px;
+}
+
+.fa-solid {
+    font-size: 20px;
+    margin-right: 10px;
+    color: var(--nav-background);
+}
+
+.home-btn {
+    width: 100px;
+    height: 50px;
+    padding: 10px 5px;
+    background-color: var(--nav-background);
+    color: var(--white-color);
+    border: none;
+    cursor: pointer;
+    font-size: medium;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.title {
+    color: var(--title-color);
+}
+
+.links {
+    margin-top: 40px;
+    padding: 20px;
+    padding-bottom: 10px;
+    margin-left: 20px;
+}
+
+.link{
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+.link a {
+    text-decoration: none;
+    font-size: 30px;
+    color: var(--black-color);
+}
+
+.heighttext{
+    height:30px;
+    width: 20%;
+}
+
+.button-Config {
+    background-color: #273628;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.button-Runtime {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: inherit;
+}
+
+.form-container .action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 300px;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+.form-container .btn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom:10px;
+    opacity: 0.8;
+}
+
+.form-popup {
+    display: none;
+    padding-left: 10px;
+    height: 60vh;
+    width: 60%;
+    position: fixed;
+    left: 10px;
+    border: 3px solid #f1f1f1;
+    z-index: 8;
+} 
+
+.form-Runtimepopup {
+    display: none;
+    padding-left: 10px;
+    height: 60vh;
+    width: 60%;
+    position: fixed;
+    right: 10px;
+    border: 3px solid #f1f1f1;
+    z-index: 7;
+    
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* module inputs */
+.module-input-wrapper {
+    border: 1px solid var(--black-color);
+    width: 50%;
+    margin: auto;
+    margin-top: 100px;
+    padding: 30px 20px;
+}
+
+.module-form-title {
+    text-align: center;
+    color: var(--green-color);
+    margin-bottom: 20px;
+}
+
+.config, .runtime {
+    margin-bottom: 20px;
+}
+
+.config label, .runtime label {
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+.config input[type='text'], .runtime input[type='text'] {
+    border: none;
+    outline: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    width: 350px;
+    border-bottom: 1px solid var(--black-color);
+}
+
+.module-form button{
+    width: 150px;
+    height: 40px;
+    color: var(--white-color);
+    background-color: var(--green-color);
+    margin-left: 10px;
+}
+
+/* execution page css */
+.execution-btns {
+    padding-right: 10px;
+    padding-left: 10px; 
+    display: flex;
+    justify-content:space-evenly;
+    align-items: center;
+}
+
+.execution-btns button {
+    font-size: 20px;
+    background-color: var(--green-color);
+    color: var(--white-color);
+    height: 50px;
+    width: 150px;
+    border: none;
+    cursor: pointer;
+}
+
+.grid label {
+    font-size: 20px;
+}
+
+.form-container span{
+    margin-right: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--nav-background);
+}

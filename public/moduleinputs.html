@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Module Inputs</title>
+    <link rel="stylesheet" href="./static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <img class="logo" src="./static/images/logo.png">
+        <h1 class="title">
+            Module Inputs
+        </h1>
+        <a href="index.html" class="home-btn">Home</a>
+    </nav>
+    <div class="module-input-wrapper">
+        <h3 class="module-form-title">Provide the Inputs</h3>
+        <form class="module-form">
+            <div class="config">
+                <label for="name">Configuration:</label>
+                <input class="config-input" type="text" id="name" name="name">
+                <button class="btn btn-primary" type="button" onclick="appendToFile();myFunction();successConfigFunction()">Save Configuration</button><br><br>
+            </div>
+    
+            <div class="runtime">
+                <label for="runtime">Runtime:</label>
+                <input class="runtime-input" type="text" id="email" name="runtime">
+                <button class="btn btn-primary" type="button" onclick="appendToRunFile();myFunctionRuntime();successRuntimeFunction()">Save Runtime</button>
+            </div>
+        </form>
+    </div>
+    <script>
+
+        function successConfigFunction() {
+        alert("Configuration Saved Successfully!");
+        }
+
+        function successRuntimeFunction() {
+        alert("Runtime Saved Successfully");
+        }
+
+        function appendToFile() {
+            
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+        
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/append', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                }
+            };
+            xhr.send('name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email));
+            
+        }
+    
+        function appendToRunFile() {
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+        
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/run', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                }
+            };
+            xhr.send('name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email));
+            
+        }
+    
+        function myFunction() {
+            document.getElementById("name").value="";
+        }
+    
+        function myFunctionRuntime() {
+            document.getElementById("email").value="";
+        }
+    </script>
+</body>
+</html>
