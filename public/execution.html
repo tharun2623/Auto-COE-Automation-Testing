@@ -22,7 +22,8 @@
                 <div>
                     <h2>Configuration</h2>   
                     <div class="grid" id="configuration-div"></div>
-        
+                </div>
+                <div class="grid">
                     <span onclick="selects()">Select all</span>
                     <span onclick="deSelect()">Deselect all</span>
                 </div>
@@ -30,17 +31,23 @@
                     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
                     <button type="button" class="btn" onclick="submitConfigurationChange()">Submit</button>
                 </div>
-                <table>
-                    <tr>
-                        <th>Test case id</th>
-                        <th>Module</th>
-                        <th>Test Title</th>
-                        <th>Run By</th>
-                    </tr>
-                    <tbody id="config-table">
-
-                    </tbody>
-                </table>
+                <div class="popup" id="myPopup">
+                    <div class="popup-content">
+                    <table>
+                        <tr>
+                            <th>Action</th>
+                            <th>Test case id</th>
+                            <th>Module</th>
+                            <th>Test Title</th>
+                            <th>Run By</th>
+                        </tr>
+                        <tbody id="config-table">
+    
+                        </tbody>
+                    </table>
+                    <button onclick="closePopup()">Close</button>
+                    </div>
+                  </div>
               </form>
         </div>
 
@@ -48,8 +55,10 @@
             <form class="form-container">
                 <div>
                     <h2>Runtime</h2>   
-                    <div class="grid" id="runtime-div"></div>
-        
+                    <div class="grid" id="runtime-div"></div>        
+                    
+                </div>
+                <div class="grid">
                     <span onclick="selects()">Select all</span>
                     <span onclick="deSelect()">Deselect all</span>
                 </div>
@@ -57,22 +66,26 @@
                     <button type="button" class="btn cancel" onclick="closeRunForm()">Close</button>
                     <button type="button" class="btn" onclick="submitRuntimeChange()">Submit</button>
                 </div>
+                <div class="popup" id="myPopup">
+                <div class="popup-content">
                 <table>
                     <tr>
                         <th>Test case id</th>
                         <th>Module</th>
-                        <th>Test Title</th>
+                        <th>Test Title</th>+
                         <th>Run By</th>
                     </tr>
                     <tbody id="runtime-table">
 
                     </tbody>
                 </table>
+                </div>
+                </div>
               </form>
         </div>
 
         <script>
-            function selects(){  
+             function selects(){  
                 var ele=document.getElementsByName('check');  
                 for(var i=0; i<ele.length; i++){  
                     if(ele[i].type=='checkbox')  
@@ -90,178 +103,207 @@
             }
 
             let configurations = [];
-            const submitConfigurationChange = () => {
-                console.log('config changes ', configurations);
-                fetch('/getFilesContent', {
-                    method: "POST",
-                    body: JSON.stringify({
+            const submitConfigurationChange = async ()=>{
+                console.log('config changes ',configurations); 
+                fetch('/getFilesContent',{
+                    method:"POST",
+                    body : JSON.stringify({
                         data: configurations
                     }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers:{
+                        'Content-Type':'application/json'
+                    } 
                 }).then(res => res.json()).then(data => {
-                    console.log('data is ', data);
+                    console.log('data is ',data)
                     const configTable = document.getElementById('config-table');
-                    configTable.innerHTML = ''; // Clear previous table content
-                    for (const d of data) {
+                    data.forEach(item => {
                         const row = document.createElement('tr');
-                        const keys = Object.keys(d);
-                        keys.forEach(key => {
-                            const val = d[key];
-                            const td = document.createElement('td');
-                            td.appendChild(document.createTextNode(val));
-                            row.appendChild(td);
+
+                        const checkboxCell = document.createElement("td");
+                        const checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkboxCell.appendChild(checkbox);
+
+                        Object.keys(item).forEach(key => {
+                            const dataCell = document.createElement("td");
+                            dataCell.textContent = item[key];
+                            row.appendChild(dataCell);
                         });
+
+                        row.insertBefore(checkboxCell, row.firstChild);
                         configTable.appendChild(row);
-                    }
+                    });
                 }).catch(err => {
-                    console.log('error is ', err);
-                    alert('config file not found or error in fetching from server');
+                    console.log('error is ',err)
+                    alert('config file not found or error in fetching from server')
                 });
             }
 
             let runtime = [];
-            const submitRuntimeChange = () => {
-                console.log('runtime changes ', runtime);
-                fetch('/getRuntimeFilesContent', {
-                    method: "POST",
-                    body: JSON.stringify({
-                        data: runtime
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(res => res.json()).then(data => {
-                    console.log('data is ', data);
-                    const runtimeTable = document.getElementById('runtime-table');
-                    runtimeTable.innerHTML = ''; // Clear previous table content
-                    for (const d of data) {
-                        const row = document.createElement('tr');
-                        const keys = Object.keys(d);
-                        keys.forEach(key => {
-                            const val = d[key];
-                            const td = document.createElement('td');
-                            td.appendChild(document.createTextNode(val));
-                            row.appendChild(td);
-                        });
-                        runtimeTable.appendChild(row);
-                    }
-                }).catch(err => {
-                    console.log('error is ', err);
-                    alert('runtime not found or error in fetching from server');
+
+            const submitRuntimeChange = async () => {
+            console.log('runtime changes', runtime);
+            try {
+                const response = await fetch('/getFilesContent', {
+                method: "POST",
+                body: JSON.stringify({
+                    data: runtime
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
                 });
+
+                if (response.ok) {
+                const data = await response.json();
+                console.log('data is', data);
+                const runtimeTable = document.getElementById('runtime-table');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+
+                    const checkboxCell = document.createElement("td");
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkboxCell.appendChild(checkbox);
+
+                    Object.keys(item).forEach(key => {
+                    const dataCell = document.createElement("td");
+                    dataCell.textContent = item[key];
+                    row.appendChild(dataCell);
+                    });
+
+                    row.insertBefore(checkboxCell, row.firstChild);
+                    runtimeTable.appendChild(row);
+                });
+                } else {
+                throw new Error('Runtime file not found or error in fetching from the server');
+                }
+            } catch (error) {
+                console.log('error is', error);
+                alert(error.message);
             }
+            };
 
-            window.onload = function() {
-                const handleConfigurationChange = (e) => {
-                    console.log('config change triggered');
-                    console.log('id is ', e.target.id);
-                    if (!configurations.includes(e.target.id)) {
-                        configurations.push(e.target.id);
-                    } else {
-                        configurations = configurations.filter(item => item != e.target.id);
-                    }
-                    console.log(configurations);
-                }
-
-                const handleRuntimeChange = (e) => {
-                    console.log('runtime change triggered');
-                    console.log('id is ', e.target.id);
-                    if (!runtime.includes(e.target.id)) {
-                        runtime.push(e.target.id);
-                    } else {
-                        runtime = runtime.filter(item => item != e.target.id);
-                    }
-                    console.log(runtime);
-                }
-
-              fetch('/getConfiguration')
-                .then(res => res.json())
-                .then(data => {
-                    const configurationDiv = document.getElementById("configuration-div");
-
-                    if (data) {
-                        for (const d of data) {
-                            if (d === "") {
-                                continue;
-                            }
-
-                            const labelDiv = document.createElement('label');
-                            const inputElement = document.createElement('input');
-
-                            const linkElement = document.createElement('a');
-                            linkElement.href = 'your-link-here'; // Replace with your desired link
-
-                            labelDiv.innerText = d;
-                            labelDiv.onclick = () => {
-                                if (!isPopupOpen) {
-                                    inputElement.checked = true;
-                                }
-                                openPopup();
-                            };
-                            labelDiv.style.cursor = 'pointer'; // Add pointer cursor style to indicate clickable label
-
-                            inputElement.type = 'checkbox';
-                            inputElement.style.cssText = 'width: 20px; height: 20px; margin-left: 15px;';
-                            inputElement.value = d;
-                            inputElement.setAttribute('name', 'check');
-                            inputElement.setAttribute('id', d);
-                            inputElement.onclick = (e) => {
-                            e.stopPropagation(); // Prevent label click event from triggering when clicking the checkbox
-                        };
-
-                        inputElement.onchange = (e) => {
-                            if (!isPopupOpen) {
-                                window.location.href = linkElement.href;
-                            }
-                        };
-
-                        labelDiv.appendChild(inputElement);
-                        labelDiv.appendChild(linkElement);
-                        configurationDiv.appendChild(labelDiv);
-                    }
-                }
-            });
 
                 let isPopupOpen = false;
 
                 function openPopup() {
                     isPopupOpen = true;
-                    // Code to show the popup
-                    alert("Popup")
+                    const popup = document.getElementById("myPopup");
+                    popup.style.display = "block";
                 }
 
-                fetch('/getRuntime').then(res => res.json()).then(data => {
-                    const runtimeDiv = document.getElementById("runtime-div");
-                    if (data) {
-                        for (const d of data) {
-                            if (d == "") {
+                function closePopup() {
+                    const popup = document.getElementById("myPopup");
+                    popup.style.display = "none";
+                }
+              
+            window.onload = function(){
+                const handleConfigurationChange = (id)=>{
+                    if (!configurations.includes(id)) {
+                        configurations.push(id)
+                        submitConfigurationChange();
+                    } else {
+                        configurations = configurations.filter(item => item != id)
+
+                    }
+                } 
+
+                const handleRuntimeChange = (id)=>{
+                    if (!runtime.includes(id)) {
+                        runtime.push(id)
+                        submitRuntimeChange();
+                    } else {
+                        runtime = runtime.filter(item => item != id)
+
+                    }
+                } 
+                
+
+                fetch('/getConfiguration').then(res => res.json()).then(data =>{
+                    const configurationDiv = document.getElementById("configuration-div")
+                    if(data){
+                        for (const d of data){
+                            if(d == ""){
                                 continue;
                             }
                             const labelDiv = document.createElement('label');
                             const inputElement = document.createElement('input');
-                            labelDiv.innerText = d;
-                            inputElement.type = 'checkbox';
-                            inputElement.setAttribute('name', 'check');
-                            inputElement.value = d;
-                            inputElement.style.cssText = 'width: 20px; height: 20px; margin-left: 15px;';
-                            inputElement.onchange = (e) => {
-                                handleRuntimeChange(e);
-                            }
+                            const linkElement = document.createElement('a');
+                            // linkElement.href = 'your-link-here'; // Replace with your desired link
 
-                            labelDiv.appendChild(inputElement);
-                            runtimeDiv.appendChild(labelDiv);
+                            linkElement.innerText = d;
+                            labelDiv.setAttribute('id',d);
+                            labelDiv.onclick = () => {
+                                openPopup();
+                                handleConfigurationChange(d);
+                            };
+                        
+                            inputElement.type = 'checkbox';
+                            inputElement.style.cssText = 'width: 20px; height: 20px; margin-left: 15px;';
+                            inputElement.value = d;
+                            inputElement.setAttribute('name', 'check');
+                            inputElement.setAttribute('id',d);
+                            inputElement.onchange = (e) => {
+                                if (!isPopupOpen) {
+                                   alert('hello');
+                                }
+                            };
+
+                            labelDiv.onclick = () => {
+                                openPopup();
+                                handleConfigurationChange(d);
+                            };
+
+                            labelDiv.appendChild(linkElement);
+                            configurationDiv.appendChild(inputElement);
+                            configurationDiv.appendChild(labelDiv);
                         }
                     }
+                })
+                
+                fetch('/getRuntime').then(res => res.json()).then(data => {
+                const runtimeDiv = document.getElementById("runtime-div");
+                if (data) {
+                    for (const d of data) {
+                    if (d == "") {
+                        continue;
+                    }
+                    const labelDiv = document.createElement('label');
+                    const inputElement = document.createElement('input');
+                    const linkElement = document.createElement('a');
+                    // linkElement.href = 'your-link-here'; // Replace with your desired link
+
+                    linkElement.innerText = d;
+                    labelDiv.setAttribute('id', d);
+                    labelDiv.onclick = () => {
+                        openPopup();
+                        handleRuntimeChange(d);
+                    };
+
+                    inputElement.type = 'checkbox';
+                    inputElement.style.cssText = 'width: 20px; height: 20px; margin-left: 15px;';
+                    inputElement.value = d;
+                    inputElement.setAttribute('name', 'check');
+                    inputElement.setAttribute('id', d);
+
+                    inputElement.onchange = (e) => {
+                        if (!isPopupOpen) {
+                            alert('hello');
+                        }
+                    };
+
+                    labelDiv.appendChild(linkElement);
+                    runtimeDiv.appendChild(inputElement);
+                    runtimeDiv.appendChild(labelDiv);
+                    }
+                }
                 });
             }
-
-            
         </script>
         <script>    
             function openForm() {
-              document.getElementById("myForm").style.display = "block";
+                document.getElementById("myForm").style.display = "block";
             }
                        
             function closeForm() {
